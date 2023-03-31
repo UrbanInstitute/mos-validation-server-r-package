@@ -46,8 +46,7 @@ run_analysis <- function(conf_data) {
         data = transformed_data,
         table_name = "Example Table",
         stat = c("mean", "sd"),
-        var = "bill_ratio",
-        by = "species"
+        var = "bill_ratio"
     )
     
     # Submit analyses ------------------------------------------------------------
@@ -59,11 +58,11 @@ run_analysis <- function(conf_data) {
 
 The `get_model_output()` function requires two arguments:
 
-- `model_name` is an arbitrary name for the analysis. This name will
-  show up in your output and should be unique to each analysis in an R
-  script.
-- `fit` is a fit model object. Only `lm` and `glm` objects are currently
-  supported.
+-   `model_name` is an arbitrary name for the analysis. This name will
+    show up in your output and should be unique to each analysis in an R
+    script.
+-   `fit` is a fit model object. Only `lm` and `glm` objects are
+    currently supported.
 
 Here’s an example of a script with a linear model (fit using `lm`) and
 binomial model (fit using `glm`):
@@ -102,18 +101,21 @@ run_analysis <- function(conf_data) {
 
 The `get_table_output()` function includes the following arguments:
 
-- `data` is the data frame object to create the summary table from. To
-  use the full data, specify `data = conf_data`.
-- `table_name` is an arbitrary name for the analysis. This name will
-  show up in your output and should be unique to each analysis in an R
-  script.
-- `stat` is the summary statistic (or set of summary statistics) to
-  calculate. This can include `mean`, `median`, `sum`, `sd`, `var`,
-  `min`, `max`, `n` or `n_distinct`.
-- `var` is the variable (or set of variables) to summarize.
-- `by` (optional) is the variable (or set of variables) to group by.
-- `na.rm` (optional) specifies explicit NA behavior (defaults to
-  `TRUE`).
+-   `data` is the data frame object to create the summary table from. To
+    use the full data, specify `data = conf_data`.
+-   `table_name` is an arbitrary name for the analysis. This name will
+    show up in your output and should be unique to each analysis in an R
+    script.
+-   `stat` is the summary statistic (or set of summary statistics) to
+    calculate. This can include `mean`, `median`, `sum`, `sd`, `var`,
+    `min`, `max`, `n`, `n_distinct`, or `quantile(numeric_vector)`,
+    where `numeric_vector` can be any numeric vector with numbers
+    between 0 and 1 of length greater than 0;
+    e.g. `quantile(c(0.1, 0.5, .9))`
+-   `var` is the variable (or set of variables) to summarize.
+-   `by` (optional) is the variable (or set of variables) to group by.
+-   `na.rm` (optional) specifies explicit NA behavior (defaults to
+    `FALSE`).
 
 Here’s an example of a script with (1) a single summary statistic, and
 (2) a table demonstrating how to pass multiple values into the `stat`,
@@ -135,16 +137,18 @@ run_analysis <- function(conf_data) {
         data = transformed_data, 
         table_name = "Example Table 1",
         stat = "mean", 
-        var = "bill_ratio"
+        var = "bill_ratio",
+        na.rm = TRUE
     )
     
     # Example table with multiple stat/var/by values  
     table2 <- get_table_output(
         data = transformed_data, 
         table_name = "Example Table 2",
-        stat = c("mean", "sd"),
+        stat = c("mean", "median", "sd", "quantile(seq(0, 1, .1))", "n"),
         var = c("bill_length_mm", "bill_ratio"),
-        by = c("species", "island")
+        by = c("species", "island"), 
+        na.rm = TRUE
     )
     
     # Submit output ------------------------------------------------------------

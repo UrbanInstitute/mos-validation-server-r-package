@@ -25,5 +25,17 @@ submit_output <- function(...) {
         stop('Only objects from the `get_table_output()` and `get_model_output()` functions can be submitted.',
              call. = FALSE)
     }
+
+    # reorder output
+    output <- output %>%
+        dplyr::select(analysis_type,
+               analysis_name,
+               matches("var"),
+               matches("group"),
+               statistic,
+               value,
+               n,
+               everything())
+
     return(output)
 }
